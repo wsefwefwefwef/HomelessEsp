@@ -1,0 +1,55 @@
+local ESPFolder = workspace:WaitForChild("HomelessPeople") -- Change "HomelessPeople" to your folder's name
+local RunService = game:GetService("RunService")
+
+-- Function to create ESP highlights and add label
+local function createESP(item)
+    if item:IsA("BasePart") and item.Name == "UpperTorso" then
+        -- Create highlight
+        local highlight = Instance.new("Highlight")
+        highlight.Adornee = item
+        highlight.FillColor = Color3.fromRGB(0, 255, 0) -- Green color
+        highlight.OutlineColor = Color3.fromRGB(255, 255, 255) -- White outline
+        highlight.Parent = item
+
+        -- Create label
+        local billboardGui = Instance.new("BillboardGui")
+        billboardGui.Adornee = item
+        billboardGui.Size = UDim2.new(10, 0, 3, 0) -- Increase size for better visibility
+        billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+        billboardGui.AlwaysOnTop = true
+        billboardGui.MaxDistance = math.huge -- Ensure it shows no matter how far
+        
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Parent = billboardGui
+        textLabel.Size = UDim2.new(1, 0, 1, 0)
+        textLabel.BackgroundTransparency = 1
+        textLabel.Text = "Homeless Person"
+        textLabel.TextColor3 = Color3.fromRGB(255, 0, 0) -- Red text color
+        textLabel.TextScaled = true
+        textLabel.Font = Enum.Font.SourceSansBold
+        textLabel.TextSize = 1000 -- Increase text size significantly
+
+        billboardGui.Parent = item
+
+        print("ESP created for:", item.Name) -- Debugging print
+    end
+end
+
+-- Add ESP for existing items in the folder
+local function addESPToFolder(folder)
+    for _, item in pairs(folder:GetDescendants()) do
+        createESP(item)
+    end
+end
+
+addESPToFolder(ESPFolder)
+
+-- Add ESP for new items added to the folder
+ESPFolder.DescendantAdded:Connect(function(child)
+    createESP(child)
+    print("New item added:", child.Name) -- Debugging print
+end)
+
+-- Debugging prints
+print("ESP script initialized")
+print("Initial items in folder:", #ESPFolder:GetDescendants())
